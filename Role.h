@@ -12,19 +12,29 @@ class PlayScene;
 class Role :public cocos2d::Sprite
 {
 public:
-//	CREATE_FUNC(Role);
+//	enum Subtype{swordsman, archer};
 	static Role* create(const std::string& name, Point pos);
-	static Role* create(ValueMap& dict);
+//	static Role* create(ValueMap& dict);
 	virtual bool init(const std::string& name);
 	void MoveTo(Point position);
+	bool takeDamage(int dam); // take dam damage, return if alive
+
 	Point getPos();
 	int getHp();
-	bool takeDamage(int dam); // take dam damage, return if alive
 	int getMP(); // get move point
+	int getmaxHp() const;
+	int getRange() const;
+	int getAtk() const;
+	string get_name() const;
+	string getCla() const;
 protected:
-	int _move_point;
-	Point _tileCoor; // tile position
+	string _name;
+	string cla;
 	int hp;
+	int mov;
+	int ran;
+	int atk;
+	int maxHp;
 };
 
 class Player :public Role
@@ -53,6 +63,9 @@ public:
 	static Enemy* create(const std::string& name);
 	static Enemy* create(ValueMap& dict);
 	virtual bool init(const std::string& name);
+
+	void setStra(Strategy s);
+	Strategy getStra();
 protected:
 	Strategy _stra;
 };

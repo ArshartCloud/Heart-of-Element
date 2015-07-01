@@ -17,6 +17,8 @@ public:
 	Card* toEle();
 	Card* toCard();
 //	virtual void doEffect(const Point target) = 0;
+
+//	bool operator <(const Card& pinfo) const;
 protected:
 	CardType card_type;
 };

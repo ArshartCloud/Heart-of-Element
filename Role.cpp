@@ -1,5 +1,6 @@
 #include "Role.h"
 #include "playscene.h"
+#include "time.h"
 using namespace std;
 USING_NS_CC;
 
@@ -13,23 +14,8 @@ Role* Role::create(const std::string& name, Point pos){
 	return nullptr;
 }
 
-Role* Role::create(ValueMap& dict) {
-	Role* ret = new Role();
-	string name = "Player.png";
-	int x = dict["x"].asInt();
-	int y = dict["y"].asInt();
-	ret->_tileCoor = PlayScene::tileCoordForPosition(Point(x, y));
-	ret->hp = dict["hp"].asInt();
-	if (ret && ret->init(name)){
-		ret->autorelease();
-		return ret;
-	}
-	CC_SAFE_DELETE(ret);
-	return nullptr;
-}
-
 bool Role::init(const std::string& name){
-	_move_point = 3;
+//	_move_point = 3;
 	
 	return initWithFile(name);
 }
@@ -37,26 +23,32 @@ bool Role::init(const std::string& name){
 void Role::MoveTo(Point position){ ; }
 
 Point Role::getPos() {
-	return _tileCoor;
+	return PlayScene::tileCoordForPosition(this->getPosition());
 }
 int Role::getHp() {
 	return hp;
 }
 
+int Role::getmaxHp() const { return maxHp; }
+int Role::getRange() const { return ran; }
+int Role::getAtk() const { return atk; }
+string Role::get_name() const{ return _name; }
+string Role::getCla() const{ return cla; }
+
 bool Role::takeDamage(int dam){
 	hp -= dam;
-	if (hp) return true;
+	if (hp > 0) return true;
 	else return false;
 }
 
 int Role::getMP(){
-	return _move_point;
+	return mov;
 }
 
 
 Player* Player::create(const std::string& name){
 	Player* ret = new Player();
-	ret->_element = Element::create("element/bar.png");
+	ret->_element = new Element();
 	if (ret && ret->init(name)){
 		ret->autorelease();
 		return ret;
@@ -66,7 +58,9 @@ Player* Player::create(const std::string& name){
 }
 
 bool Player::init(const std::string& name){
-	_move_point = 3;
+	mov = 3;
+	hp = 20;
+	maxHp = 20;
 	return initWithFile(name);
 }
 
@@ -104,12 +98,22 @@ Enemy* Enemy::create(const std::string& name){
 }
 Enemy* Enemy::create(ValueMap& dict) {
 	Enemy* ret = new Enemy();
-	string name = "Player.png";
+//	string name = "enemy.png";
+	string cla = "role/small/";
+	cla += dict["class"].asString();
+	cla += ".png";
+	ret->_name = dict["_name"].asString();
 	int x = dict["x"].asInt();
 	int y = dict["y"].asInt();
-	ret->_tileCoor = PlayScene::tileCoordForPosition(Point(x, y));
 	ret->hp = dict["hp"].asInt();
-	if (ret && ret->init(name)){
+	ret->mov = dict["mov"].asInt();
+	ret->atk = dict["atk"].asInt();
+	ret->ran = dict["ran"].asInt();
+	string str =  dict["strategy"].asString();
+	if (str == "protected") ret->_stra = Strategy::Protected;
+	else if (str == "aggressive") ret->_stra = Strategy::Aggressive;
+	else if (str == "stable") ret->_stra = Strategy::Stable;
+	if (ret && ret->init(cla)){
 		ret->autorelease();
 		return ret;
 	}
@@ -117,7 +121,15 @@ Enemy* Enemy::create(ValueMap& dict) {
 	return nullptr;
 }
 bool Enemy::init(const std::string& name){
-	_move_point = 3;
+//	_move_point = 3;
 
 	return initWithFile(name);
+}
+
+void Enemy::setStra(Enemy::Strategy s) {
+	_stra = s;
+}
+
+Enemy::Strategy Enemy::getStra() {
+	return _stra;
 }

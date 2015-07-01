@@ -1,11 +1,13 @@
 #ifndef __NewScene_H__
 #define __NewScene_H__
 
-#include "Role.h"
 #include "cocos2d.h"
+#include "Role.h"
+#include "Grid.h"
 #include "HandCardHud.h"
 #include "Element.h"
 #include <string>
+//#include <vector>
 using namespace std;
 USING_NS_CC;
 
@@ -17,27 +19,33 @@ public:
 	virtual bool init();
 	CREATE_FUNC(PlayScene);
 	void initEnemy();
+	void initGrid();
 
 	virtual void update(float fDelta);
 	
 	static Point tileCoordForPosition(Point position);
 	static Point PositionFortileCoord(Point tileCoord);
-
+	static HandCardHud* getHud();
+	map<Point, Grid>& gettile();
+	void reStart();
 	//role
 	void damage(Role* from, Role* to, int num = 1);
 	void death(Role* role);
-	void dfs(int x, int y, int m);
 	void ResetArea();
 	void GetMoveArea(CCNode *pSender);
 	void GetSkillArea(Element* e);
+	void GetPrioPoint();
 
 //player
-	void setPlayerPosition(Point position);
+	void moveRole(Role* r, Point position); // move to tile pos
+	bool onTouchBegan(Touch* touch, Event* unused_event);
+	void onTouchMoved(Touch* touch, Event* unused_event);
 	void onTouchEnded(Touch *touch, Event *unused_event);
 	static Player* getPlayer();
 	void drawCards(int num); // draw n cards
 	void add_to_hand(Card* c);
 	void clearEle();
+	void gameOver();
 	//phase
 	Phase getPhase();
 	void toStandbyPhase();
@@ -45,7 +53,8 @@ public:
 	void toPlayPhase();
 	void toEnemyPhase();
 //enemy
-	Vector<Role*>* getEnemy();
+	Vector<Enemy*>* getEnemy();
+	void attackPlayer(Enemy* from);
 
 private:
 	static CCTMXTiledMap *_tileMap;
@@ -57,9 +66,10 @@ private:
 	Phase _phase;
 	static Player* _player;
 	set<Point> _move_area;
-//	set<Point> _skill_area;
-	Vector<Role*> _enemys;
+	Vector<Enemy*> _enemys;
+	map<Point, Grid> _tile; // save the dict with player
 
+	Point sel_tile;
 	static HandCardHud *_hud;
 
 };

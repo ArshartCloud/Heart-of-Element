@@ -21,7 +21,13 @@ public:
 	void TouchSystem();
 	static void setPlayScene(PlayScene *_plays);
 
-	void _update(Vector<Card*>* newHands);
+	void showPInfo();
+	void setSpellDes(string s);
+	void clearDes();
+	void showInfo(Role* r);
+	void clearInfo();
+
+	void _update(Vector<Card*>* newHands);// update hands.
 	void showCards();
 	void showEle();
 	void add_to_ele();
@@ -32,14 +38,22 @@ private:
 	EventDispatcher* dispatcher;
 
 	Sprite* HandCardArea;
-	Sprite* ElementArea;
-//	Vector<Card*>* _hands;
+	Sprite* _eleArea_up;
+	Sprite* _eleArea_low;
 	Label* mesg;
 
 	static PlayScene *_plays;
-//	Element* _element;
 	Player* _player;
 	Card* _sel_card;
+
+	//info
+	Sprite* _role;
+	Label* _emsg;
+	//Label* _mp; // move point
+	//player info
+	Sprite* _head;
+	Label* _pmsg;
+	Label* _spdes;  // spell description
 };
 
 

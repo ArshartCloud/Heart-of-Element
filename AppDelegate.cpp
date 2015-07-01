@@ -33,13 +33,14 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 	//set fenbianlv
 	glview->setDesignResolutionSize(960.0f, 540.0f, ResolutionPolicy::FIXED_HEIGHT);
+	glview->setFrameSize(960.0f, 540.0f);
 	std::vector<std::string> searchPath;
 	searchPath.push_back("H_1920");
 	FileUtils::getInstance()->setSearchPaths(searchPath);
-//	director->setContentScaleFactor(1920.0f / 960.0f);
+	//director->setContentScaleFactor(1920.0f / 960.0f);
 
     // turn on display FPS
-    director->setDisplayStats(true);
+    director->setDisplayStats(false);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0 / 60);
